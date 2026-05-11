@@ -18,12 +18,14 @@ endif()
 # Find Qt with RemoteObjects support
 logos_find_qt()
 
-# Define the module first (creates target logos_ia_module_plugin)
+# Define the module
 logos_module(
     NAME logos_ia
     SOURCES 
-        src/ia_plugin.h
-        src/ia_plugin.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ia_plugin.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/ia_plugin.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/search_client.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/search_client.cpp
 )
 
 # Find repc tool for Qt Remote Objects code generation
