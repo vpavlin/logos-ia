@@ -37,7 +37,7 @@ signals:
 
 private:
     LogosModules* logos = nullptr;
-    bool m_initialized = false;
+    LogosAPI* logosAPI = nullptr;
 };
 
 #endif // IA_PLUGIN_H

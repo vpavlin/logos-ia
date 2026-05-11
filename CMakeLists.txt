@@ -1,11 +1,12 @@
-# Minimal Logos Module CMakeLists.txt
-# This is a simple example showing how to use LogosModule.cmake
+# IA Client Module CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.14)
-project(MinimalModulePlugin LANGUAGES CXX)
+project(LogosIaPlugin LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Include the Logos Module CMake helper
-# For nix builds, this is provided via LOGOS_MODULE_BUILDER_ROOT
 if(DEFINED ENV{LOGOS_MODULE_BUILDER_ROOT})
     include($ENV{LOGOS_MODULE_BUILDER_ROOT}/cmake/LogosModule.cmake)
 elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cmake/LogosModule.cmake")
@@ -16,9 +17,10 @@ endif()
 
 # Define the module
 logos_module(
-    NAME minimal
+    NAME logos_ia
     SOURCES 
-        src/minimal_interface.h
-        src/minimal_plugin.h
-        src/minimal_plugin.cpp
+        src/ia_interface.h
+        src/ia_interface.rep
+        src/ia_plugin.h
+        src/ia_plugin.cpp
 )

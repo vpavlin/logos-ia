@@ -1,20 +1,19 @@
-#include "minimal_plugin.h"
+#include "ia_plugin.h"
 #include "logos_api.h"
-#include "logos_api_client.h"
 #include <QDebug>
 
-MinimalPlugin::MinimalPlugin(QObject* parent)
+IaPlugin::IaPlugin(QObject* parent)
     : QObject(parent)
 {
-    qDebug() << "MinimalPlugin: Constructor called";
+    qDebug() << "IaPlugin: Constructor called";
 }
 
-MinimalPlugin::~MinimalPlugin()
+IaPlugin::~IaPlugin()
 {
-    qDebug() << "MinimalPlugin: Destructor called";
+    qDebug() << "IaPlugin: Destructor called";
 }
 
-void MinimalPlugin::initLogos(LogosAPI* logosAPIInstance) {
+void IaPlugin::initLogos(LogosAPI* logosAPIInstance) {
     if (logos) {
         delete logos;
         logos = nullptr;
@@ -29,25 +28,18 @@ void MinimalPlugin::initLogos(LogosAPI* logosAPIInstance) {
     }
 }
 
-QString MinimalPlugin::greet(const QString& name)
+QVariantList IaPlugin::search(const QString& query, int rows)
 {
-    qDebug() << "MinimalPlugin: greet called with name:" << name;
+    qDebug() << "IaPlugin: search called with query:" << query << "rows:" << rows;
     
-    QString greeting = QString("Hello, %1! Greetings from the Minimal module.").arg(name);
-    
-    // Emit an event for the greeting
-    emit eventResponse("greeted", QVariantList() << name << greeting);
-    
-    return greeting;
+    // Placeholder — will be implemented in T1.3
+    return QVariantList();
 }
 
-QString MinimalPlugin::getStatus()
+QVariantMap IaPlugin::getItemMetadata(const QString& identifier)
 {
-    qDebug() << "MinimalPlugin: getStatus called";
+    qDebug() << "IaPlugin: getItemMetadata called with identifier:" << identifier;
     
-    if (m_initialized) {
-        return "Minimal module is running and initialized.";
-    } else {
-        return "Minimal module is loaded but not yet initialized.";
-    }
+    // Placeholder — will be implemented later
+    return QVariantMap();
 }
