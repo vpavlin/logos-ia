@@ -27,32 +27,3 @@ logos_module(
         ${CMAKE_CURRENT_SOURCE_DIR}/src/search_client.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/search_client.cpp
 )
-
-# Find repc tool for Qt Remote Objects code generation
-find_program(REPC_TOOL NAMES repc PATHS /usr/libexec /nix/store/*/libexec NO_DEFAULT_PATH)
-if(NOT REPC_TOOL)
-    find_program(REPC_TOOL NAMES repc)
-endif()
-
-if(REPC_TOOL AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/ia_backend.rep)
-    message(STATUS "Found repc: ${REPC_TOOL}")
-    
-    # Create a custom target for repc code generation
-    set(REPC_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated_code")
-    set(REPC_SOURCE_HEADER "${REPC_OUTPUT_DIR}/ia_backend_source.h")
-    
-    add_custom_target(repc_ia_backend ALL
-        COMMAND ${REPC_TOOL} -o source ${CMAKE_CURRENT_SOURCE_DIR}/src/ia_backend.rep ${REPC_SOURCE_HEADER}
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/ia_backend.rep
-        COMMENT "Generating Qt Remote Objects source for ia_backend.rep"
-        VERBATIM
-    )
-    
-    # Add include directory for generated headers
-    target_include_directories(logos_ia_module_plugin PRIVATE ${REPC_OUTPUT_DIR})
-    
-    # Ensure repc runs before plugin build
-    add_dependencies(logos_ia_module_plugin repc_ia_backend)
-else()
-    message(WARNING "repc tool not found or .rep file missing — Qt Remote Objects code generation skipped")
-endif()

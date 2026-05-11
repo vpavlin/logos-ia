@@ -3,6 +3,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QUrlQuery>
+#include <QEventLoop>
 #include <QDebug>
 
 SearchClient::SearchClient(QObject* parent)
@@ -34,7 +35,7 @@ QUrl SearchClient::buildSearchUrl(const QString& query, int rows,
     
     if (!collections.isEmpty()) {
         // IA API expects multiple collection[]= values
-        QStringList colls = collections.split(',', QString::SkipEmptyParts);
+        QStringList colls = collections.split(',', Qt::SkipEmptyParts);
         for (const QString& coll : colls) {
             queryParams.addQueryItem("collection[]", coll.trimmed());
         }
