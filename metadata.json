@@ -1,0 +1,23 @@
+{
+  "name": "logos_ia",
+  "version": "0.1.0",
+  "type": "core",
+  "category": "network",
+  "description": "Internet Archive client module — search, download, bookmark IA collections for offline access",
+  "main": "ia_plugin",
+  "dependencies": [],
+
+  "nix": {
+    "packages": {
+      "build": [],
+      "runtime": []
+    },
+    "external_libraries": [],
+    "cmake": {
+      "find_packages": ["Qt6::Core", "Qt6::Network"],
+      "extra_sources": [],
+      "extra_include_dirs": [],
+      "extra_link_libraries": []
+    }
+  }
+}
