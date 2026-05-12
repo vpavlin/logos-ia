@@ -41,7 +41,7 @@
 
         # Build using the tests/ subdirectory CMakeLists.txt
         configurePhase = ''
-          cmake ../tests -B build -DCMAKE_CXX_STANDARD=17
+          cmake ./tests -B build -DCMAKE_CXX_STANDARD=17
         '';
 
         buildPhase = ''
@@ -50,7 +50,7 @@
 
         postInstall = ''
           mkdir -p $out/bin
-          cp build/test_search_client $out/bin/
+          cp build/test_search_simple $out/bin/
         '';
       };
     in
