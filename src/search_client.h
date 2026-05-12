@@ -20,7 +20,8 @@ class SearchClient : public QObject
 
 public:
     explicit SearchClient(QObject* parent = nullptr);
-    ~SearchClient() override = default;
+    ~SearchClient() override;
+
 
     /**
      * @brief Search Internet Archive

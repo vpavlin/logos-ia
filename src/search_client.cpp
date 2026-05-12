@@ -13,6 +13,16 @@ SearchClient::SearchClient(QObject* parent)
     m_networkManager.setTransferTimeout(30000); // 30 second timeout
 }
 
+SearchClient::~SearchClient()
+{
+    // Cancel any pending network request to avoid use-after-free
+    if (m_currentReply) {
+        m_currentReply->abort();
+        m_currentReply->deleteLater();
+        m_currentReply = nullptr;
+    }
+}
+
 QString SearchClient::userAgent()
 {
     return "logos_ia/0.1.0";
