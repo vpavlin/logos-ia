@@ -60,7 +60,7 @@ endif()
 
 # Integration tests (T1.7)
 find_package(Qt6 REQUIRED COMPONENTS Network Test)
-add_executable(test_search_client tests/test_search_client.cpp)
+add_executable(test_search_client tests/test_search_client.cpp ../src/search_client.cpp)
 target_link_libraries(test_search_client PRIVATE Qt6::Network Qt6::Test)
 target_include_directories(test_search_client PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set_target_properties(test_search_client PROPERTIES
