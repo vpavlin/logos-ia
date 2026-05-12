@@ -56,7 +56,7 @@
     in
     {
       packages.x86_64-linux = {
-        default = mainModule;
+        default = mainModule.packages.x86_64-linux.default;
         test-search-client = testSearchClient;
       };
     };
