@@ -58,6 +58,10 @@
       packages.x86_64-linux = {
         default = mainModule.packages.x86_64-linux.default;
         test-search-client = testSearchClient;
+        # LGX bundle for loading in Basecamp (dev variant - resolves from /nix/store)
+        lgx = mainModule.packages.x86_64-linux.lgx or null;
+        # LGX bundle for portable deployment
+        lgx-portable = mainModule.packages.x86_64-linux.lgx-portable or null;
       };
     };
 }
