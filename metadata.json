@@ -4,7 +4,7 @@
   "type": "core",
   "category": "network",
   "description": "Internet Archive client module — search, download, bookmark IA collections for offline access",
-  "main": "logos_ia",
+  "main": "logos_ia_plugin",
   "dependencies": [],
 
   "nix": {
