@@ -1,6 +1,7 @@
 class IaBackend
 {
     SIGNAL(searchResultsReady(QVariantList results))
+    SIGNAL(itemMetadataReady(QVariantMap metadata))
     SLOT(QVariantList search(string query, int rows))
     SLOT(QVariantMap getItemMetadata(string identifier))
 }

@@ -167,8 +167,7 @@ void SearchClient::onMetadataReplyFinished()
     } else {
         QByteArray data = m_currentReply->readAll();
         QVariantMap metadata = parseMetadataResponse(data);
-        // Could emit a metadataReady signal if needed
-        Q_UNUSED(metadata);
+        emit itemMetadataReady(metadata);
     }
     m_currentReply->deleteLater();
     m_currentReply = nullptr;

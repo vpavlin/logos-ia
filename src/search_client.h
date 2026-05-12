@@ -50,6 +50,12 @@ signals:
     void searchCompleted(const QVariantList& results);
 
     /**
+     * @brief Emitted when item metadata is retrieved
+     * @param metadata The item metadata
+     */
+    void itemMetadataReady(const QVariantMap& metadata);
+
+    /**
      * @brief Emitted when an error occurs during a network request
      * @param errorString Description of the error
      */
