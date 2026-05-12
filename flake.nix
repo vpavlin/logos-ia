@@ -50,7 +50,7 @@
 
         postInstall = ''
           mkdir -p $out/bin
-          cp build/test_search_simple $out/bin/
+          cp build/test_minimal $out/bin/
         '';
       };
     in
