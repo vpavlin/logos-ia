@@ -69,30 +69,33 @@ QVariantList SearchClient::search(const QString& query, int rows,
     
     m_currentReply = m_networkManager.get(request);
     
-    // Connect reply finished signal
-    connect(m_currentReply, &QNetworkReply::finished,
-            this, &SearchClient::onSearchReplyFinished);
-    
     // Wait for synchronous completion (block until reply finishes)
     QEventLoop loop;
-    connect(m_currentReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    connect(m_currentReply, &QNetworkReply::finished, &loop, &QEventLoop::quit, Qt::UniqueConnection);
     loop.exec();
     
     // Check if error occurred during the request
-    if (m_currentReply->error() != QNetworkReply::NoError) {
+    // Use a local copy of the reply pointer to avoid race conditions
+    QNetworkReply* reply = m_currentReply;
+    m_currentReply = nullptr;  // Clear immediately to prevent double-free
+    
+    if (!reply) {
+        qWarning() << "Search: reply was null after wait";
+        return QVariantList();
+    }
+    
+    if (reply->error() != QNetworkReply::NoError) {
         QString errorMsg = QString("Search error: %1 (%2)")
-            .arg(m_currentReply->errorString(),
-                 QString::number(m_currentReply->error()));
+            .arg(reply->errorString(),
+                 QString::number(reply->error()));
         emit errorOccurred(errorMsg);
-        m_currentReply->deleteLater();
-        m_currentReply = nullptr;
+        reply->deleteLater();
         return QVariantList();
     }
     
     // Parse the response
-    QByteArray data = m_currentReply->readAll();
-    m_currentReply->deleteLater();
-    m_currentReply = nullptr;
+    QByteArray data = reply->readAll();
+    reply->deleteLater();
     
     return parseSearchResponse(data);
 }
@@ -109,27 +112,31 @@ QVariantMap SearchClient::getItemMetadata(const QString& identifier)
     
     m_currentReply = m_networkManager.get(request);
     
-    connect(m_currentReply, &QNetworkReply::finished,
-            this, &SearchClient::onMetadataReplyFinished);
-    
     // Synchronous wait
     QEventLoop loop;
-    connect(m_currentReply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    connect(m_currentReply, &QNetworkReply::finished, &loop, &QEventLoop::quit, Qt::UniqueConnection);
     loop.exec();
     
-    if (m_currentReply->error() != QNetworkReply::NoError) {
-        QString errorMsg = QString("Metadata error: %1 (%2)")
-            .arg(m_currentReply->errorString(),
-                 QString::number(m_currentReply->error()));
-        emit errorOccurred(errorMsg);
-        m_currentReply->deleteLater();
-        m_currentReply = nullptr;
+    // Use local pointer to avoid race conditions
+    QNetworkReply* reply = m_currentReply;
+    m_currentReply = nullptr;
+    
+    if (!reply) {
+        qWarning() << "Metadata: reply was null after wait";
         return QVariantMap();
     }
     
-    QByteArray data = m_currentReply->readAll();
-    m_currentReply->deleteLater();
-    m_currentReply = nullptr;
+    if (reply->error() != QNetworkReply::NoError) {
+        QString errorMsg = QString("Metadata error: %1 (%2)")
+            .arg(reply->errorString(),
+                 QString::number(reply->error()));
+        emit errorOccurred(errorMsg);
+        reply->deleteLater();
+        return QVariantMap();
+    }
+    
+    QByteArray data = reply->readAll();
+    reply->deleteLater();
     
     return parseMetadataResponse(data);
 }
