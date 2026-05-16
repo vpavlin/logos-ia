@@ -35,13 +35,15 @@ QUrl SearchClient::buildSearchUrl(const QString& query, int rows,
     QUrl url("https://archive.org/advancedsearch.php");
     
     QUrlQuery queryParams;
-    queryParams.addQueryItem("q", query);
     queryParams.addQueryItem("rows", QString::number(qMin(rows, 1000)));
     queryParams.addQueryItem("output", "json");
     
+    // IA API v2: mediatype filter goes in query string as Solr syntax
+    QString effectiveQuery = query;
     if (!mediatype.isEmpty()) {
-        queryParams.addQueryItem("mediatype[]", mediatype);
+        effectiveQuery += " mediatype:" + mediatype;
     }
+    queryParams.addQueryItem("q", effectiveQuery.isEmpty() ? "*" : effectiveQuery);
     
     if (!collections.isEmpty()) {
         // IA API expects multiple collection[]= values
@@ -139,38 +141,6 @@ QVariantMap SearchClient::getItemMetadata(const QString& identifier)
     reply->deleteLater();
     
     return parseMetadataResponse(data);
-}
-
-void SearchClient::onSearchReplyFinished()
-{
-    if (m_currentReply->error() != QNetworkReply::NoError) {
-        QString errorMsg = QString("Search error: %1 (%2)")
-            .arg(m_currentReply->errorString(),
-                 QString::number(m_currentReply->error()));
-        emit errorOccurred(errorMsg);
-    } else {
-        QByteArray data = m_currentReply->readAll();
-        QVariantList results = parseSearchResponse(data);
-        emit searchCompleted(results);
-    }
-    m_currentReply->deleteLater();
-    m_currentReply = nullptr;
-}
-
-void SearchClient::onMetadataReplyFinished()
-{
-    if (m_currentReply->error() != QNetworkReply::NoError) {
-        QString errorMsg = QString("Metadata error: %1 (%2)")
-            .arg(m_currentReply->errorString(),
-                 QString::number(m_currentReply->error()));
-        emit errorOccurred(errorMsg);
-    } else {
-        QByteArray data = m_currentReply->readAll();
-        QVariantMap metadata = parseMetadataResponse(data);
-        emit itemMetadataReady(metadata);
-    }
-    m_currentReply->deleteLater();
-    m_currentReply = nullptr;
 }
 
 QVariantList SearchClient::parseSearchResponse(const QByteArray& data)

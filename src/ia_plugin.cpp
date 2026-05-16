@@ -23,16 +23,13 @@ IaPlugin::~IaPlugin()
 }
 
 void IaPlugin::initLogos(LogosAPI* logosAPIInstance) {
-    if (logos) {
-        delete logos;
-        logos = nullptr;
-    }
-    if (logosAPI) {
-        delete logosAPI;
-        logosAPI = nullptr;
-    }
-    logosAPI = logosAPIInstance;
-    if (logosAPI) {
+    // Delete old API (its destructor will delete the LogosModules child)
+    delete logosAPI;
+    logosAPI = nullptr;
+    logos = nullptr;
+
+    if (logosAPIInstance) {
+        logosAPI = logosAPIInstance;
         logos = new LogosModules(logosAPI);
     }
 }

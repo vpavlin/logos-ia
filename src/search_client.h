@@ -61,10 +61,6 @@ signals:
      */
     void errorOccurred(const QString& errorString);
 
-private slots:
-    void onSearchReplyFinished();
-    void onMetadataReplyFinished();
-
 private:
     /**
      * @brief Build IA search API URL from parameters
